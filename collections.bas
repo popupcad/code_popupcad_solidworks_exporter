@@ -51,9 +51,8 @@ Function reverse_c(c As Collection)
         c_out.Add c_in(jj)
     Next ii
     Set c = c_out
-
+    
 End Function
-
 Function UniqueID() As String
     Static i As Integer
     Dim s As String
@@ -80,5 +79,41 @@ Function replace(c As Collection, replacement, index)
     Next ii
     Set c = cout
 
+
+End Function
+
+Function IsVarArrayEmpty(anArray As Collection)
+
+Dim ii As Integer
+ii = 0
+For Each item In anArray
+    ii = ii + 1
+Next
+    
+    
+If ii = 0 Then
+    IsVarArrayEmpty = True
+Else
+    IsVarArrayEmpty = False
+End If
+
+End Function
+
+Function ubound_c(collection1 As Collection) As Integer
+
+Dim ii As Integer
+
+ii = 0
+For Each item In anArray
+    ii = ii + 1
+Next
+
+ubound_c = ii
+
+End Function
+
+Function lbound_c(collection1 As Collection) As Integer
+
+lbound_c = 0
 
 End Function

@@ -42,6 +42,25 @@ Function build_from_vectors(a As Variant) As Variant
     build_from_vectors = A_out
 End Function
 
+Function build_from_collection(a As Collection) As Variant
+    Dim innerelement As Variant
+    Dim m, n, ii, jj As Long
+    Dim A_out() As Variant
+    
+    innerelement = a(0)
+    m = UBound(a, 1) - LBound(a, 1)
+    n = UBound(innerelement, 1) - LBound(innerelement, 1)
+    ReDim A_out(m, n)
+    
+    For ii = 0 To m
+        For jj = 0 To n
+            A_out(ii, jj) = a(ii)(jj)
+        Next jj
+    Next ii
+    
+    build_from_vectors = A_out
+End Function
+
 Function toString(a As Variant) As Collection
     Dim strings As New Collection
     Dim ii, jj As Long
@@ -59,12 +78,6 @@ Function toString(a As Variant) As Collection
     Set toString = strings
 End Function
 
-Function toYaml(a As Variant) As Collection
-    Dim strings As Collection
-    Set strings = toString(a)
-    stringcollections.PadStrings strings, "- - [", "  - [", "]"
-    Set toYaml = strings
-End Function
 Function toYaml2(a As Variant) As Collection
     Dim strings As Collection
     Set strings = toString(a)

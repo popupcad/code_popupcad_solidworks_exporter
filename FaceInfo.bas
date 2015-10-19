@@ -1,53 +1,28 @@
 Attribute VB_Name = "FaceInfo"
-Function FaceInfo(face As SldWorks.Face2) As Variant
-    Dim faceloops() As Variant
+Function FaceInfo(face As SldWorks.Face2) As Collection
     Dim loops As Variant
     Dim jj As Long
-    Dim loop1 As SldWorks.Loop2
+    Dim loop1 As SldWorks.loop2
     Dim l As Long
     
     loops = face.GetLoops
+    Dim faceinfo_c As New Collection
     
     l = -1
-    'm = UBound(loops) - LBound(loops)
     For jj = LBound(loops) To UBound(loops)
         Set loop1 = loops(jj)
-        l = ArrayFunctions.AddItem(faceloops, ProcessLoop(loop1), l)
+        faceinfo_c.Add ProcessLoop(loop1)
     Next jj
-    ArrayFunctions.reverse faceloops
-    
-    FaceInfo = faceloops
+    collections.reverse_c faceinfo_c
+        
+    Set FaceInfo = faceinfo_c
 
 End Function
-'Function FaceInfo2(face As SldWorks.Face2, exterior As Variant, interiors As Variant)
-'    'Dim faceloops() As Variant
-'    Dim loops As Variant
-'    Dim jj As Long
-'    Dim loop1 As SldWorks.Loop2
-'    Dim l As Long
-'
-'    loops = face.GetLoops
-'
-'    Set loop1 = loops(UBound(loops))
-'    exterior = ProcessLoop(loop1)
-'
-'    l = -1
-'    For jj = (UBound(loops) - 1) To LBound(loops) Step -1
-'        Set loop1 = loops(jj)
-'        l = ArrayFunctions.AddItem(interiors, ProcessLoop(loop1), l)
-'    Next jj
-'    'interiors = faceloops
-'
-'End Function
-Function ProcessLoop(loop_in As SldWorks.Loop2) As Variant
+Function ProcessLoop(loop_in As SldWorks.loop2) As Variant
         loopedges = ApproxEdges(loop_in)
         loopedges2 = CorrectlyOrderedEdges(loopedges)
         ProcessLoop = CollapseEdges(loopedges2)
 End Function
-
-
-
-
 Function CollapseEdges(edgelist As Variant) As Variant
     Dim out() As Variant
     Dim testcases() As Variant
@@ -58,10 +33,14 @@ Function CollapseEdges(edgelist As Variant) As Variant
     
     Dim l As Long
     l = -1
+    
+    'Dim collection1 As New Collection
+    
     For Each edge In edgelist
         For ii = LBound(edge) To UBound(edge) - 1
             point = edge(ii)
             l = ArrayFunctions.AddItem(out, point, l)
+            'collection1.Add point
         Next ii
     Next
     
@@ -108,7 +87,7 @@ Function CorrectlyOrderedEdges(edgelist As Variant) As Variant
     End If
 End Function
 
-Function ApproxEdges(loop1 As SldWorks.Loop2) As Variant
+Function ApproxEdges(loop1 As SldWorks.loop2) As Variant
     Dim edges As Variant
     Dim edge As SldWorks.edge
     Dim aedge As Variant
@@ -161,7 +140,7 @@ Function ApproximateEdge(edge As SldWorks.edge) As Variant
     ApproximateEdge = outpoints
 End Function
 
-Function VertexInfo(loop1 As SldWorks.Loop2) As Variant
+Function VertexInfo(loop1 As SldWorks.loop2) As Variant
     Dim vertices As Variant
     Dim vertex As SldWorks.vertex
     Dim point As Variant
@@ -192,11 +171,11 @@ Function VertexInfo(loop1 As SldWorks.Loop2) As Variant
     VertexInfo = scoords
 End Function
 
-Function build_loops_string(loops As Variant) As Collection
+Function build_loops_string(loops As Collection) As Collection
     Dim face_string As New Collection
     Dim loopstring As Collection
     
-    If Not ArrayFunctions.IsVarArrayEmpty(loops) Then
+    If Not collections.IsVarArrayEmpty(loops) Then
         For Each loop1 In loops
             edgematrix = Matrices.build_from_vectors(loop1)
             Set loopstring = Matrices.toYaml2(edgematrix)
@@ -210,9 +189,4 @@ Function build_loops_string(loops As Variant) As Collection
     
     
     Set build_loops_string = face_string
-End Function
-
-Function build_loop_string(loop1 As Variant) As Collection
-    edgematrix = Matrices.build_from_vectors(loop1)
-    Set build_loop_string = Matrices.toYaml2(edgematrix)
 End Function

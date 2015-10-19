@@ -237,7 +237,8 @@ Function FaceInfoDict(face As SldWorks.Face2, parent As Collection) As Collectio
     'info.Add build_loop_string(info.item("exterior")), "exterior_s"
     'info.Add build_loops_string(info.item("interiors")), "interiors_s"
 '   ---------
-    loops = FaceInfo.FaceInfo(face)
+    Dim loops As Collection
+    Set loops = FaceInfo.FaceInfo(face)
     info.Add loops, "loops"
     info.Add build_loops_string(info.item("loops")), "output"
 '   ---------

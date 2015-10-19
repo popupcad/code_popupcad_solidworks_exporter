@@ -23,7 +23,7 @@ Sub main()
     SolidworksInfo.MarkVisibleFaces component_info, visible_faces
     
     Set transform = view.ModelToViewTransform
-    Set strings = BuildExportData3(transform, component_info)
+    Set strings = BuildExportData(transform, component_info)
     'Dim filename As String
     'filename = "C:\Users\danb0b\Desktop\" & model.GetTitle & "_" & view.Name & ".yaml"
     Dim filename2 As String
@@ -32,58 +32,7 @@ Sub main()
     Debug.Print "Done"
 End Sub
 
-Function BuildExportData(viewTransform As SldWorks.mathTransform, component_info As Collection) As Collection
-    Dim lines As New Collection
-    Dim transform As Variant
-    Dim transformstring As New Collection
-    
-    lines.Add "!!python/object:popupcad.filetypes.solidworksimport.SolidworksImport"
-    lines.Add "transform:"
-
-    transform = Matrices.buildFromMathTransform(viewTransform)
-    Set transformstring = Matrices.toString(transform)
-    stringcollections.PadStrings transformstring, "- [", "- [", "]"
-    collections.ExtendCollection lines, transformstring
-    
-    lines.Add "geoms:"
-    Dim geomstring As New Collection
-    SolidworksInfo.GenFaceOutput lines, component_info
-    
-    Set BuildExportData = lines
-End Function
-
-
-Function BuildExportData2(viewTransform As SldWorks.mathTransform, component_info As Collection) As Collection
-    Dim lines As New Collection
-    Dim transform As Variant
-    Dim transformstring As New Collection
-    
-    lines.Add "!!python/object:popupcad.filetypes.solidworksimport.SolidworksImport"
-    lines.Add "transform:"
-
-    transform = Matrices.buildFromMathTransform(viewTransform)
-    Set transformstring = Matrices.toString(transform)
-    stringcollections.PadStrings transformstring, "- [", "- [", "]"
-    collections.ExtendCollection lines, transformstring
-    
-    lines.Add "geoms:"
-    Dim geomstring As New Collection
-    
-    Dim component, bodies, body_info, faces, face_info As Collection
-    For Each component In component_info
-        For Each body_info In component.item("bodies")
-            For Each face_info In body_info.item("faces")
-                If face_info.item("isVisible") Then
-                    collections.ExtendCollection lines, face_info.item("output")
-                End If
-            Next face_info
-        Next body_info
-    Next component
-    
-    Set BuildExportData2 = lines
-End Function
-
-Function BuildExportData3(viewTransform As SldWorks.mathTransform, components As Collection) As Collection
+Function BuildExportData(viewTransform As SldWorks.mathTransform, components As Collection) As Collection
     Dim lines As New Collection
     Dim transform As Variant
     Dim transformstring As New Collection
@@ -139,6 +88,6 @@ Function BuildExportData3(viewTransform As SldWorks.mathTransform, components As
         End If
     Next component_info
     
-    Set BuildExportData3 = lines
+    Set BuildExportData = lines
 End Function
 
