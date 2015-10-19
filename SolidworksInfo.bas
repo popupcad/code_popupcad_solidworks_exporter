@@ -112,7 +112,7 @@ Function part_comp_info(comp As SldWorks.PartDoc) As Collection
 '   ---------
     info.Add UniqueID, "id"
 '   ---------
-    info.Add (comp.Visible = swComponentVisibilityState_e.swComponentVisible), "isVisible"
+    info.Add True, "isVisible"
 '   ---------
     
     Dim bodies As New Collection
